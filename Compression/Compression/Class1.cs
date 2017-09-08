@@ -64,12 +64,31 @@ namespace Compression
                     }
                     else
                     {
+                        if (cantidad>255)
+                        {
+                            byte bytes;
+                            for (int j = 1; j < cantidad/255; j++)
+                            {
+                                 bytes = Convert.ToByte(255);
+                                lista.Add(bytes);
+                                lista.Add(s[i]);
+                            }
+                            bytes = Convert.ToByte(cantidad%255);
+                            lista.Add(bytes);
+                            lista.Add(s[i]);
+                            un = s[i];
+                            cantidad = 1;
+
+                        }
+                        else
+                        {
+                            byte bytes = Convert.ToByte(cantidad);
+                            lista.Add(bytes);
+                            lista.Add(s[i]);
+                            un = s[i];
+                            cantidad = 1;
+                        }
                         
-                        byte bytes = Convert.ToByte(cantidad);
-                        lista.Add(bytes);
-                        lista.Add(s[i]);
-                        un = s[i];
-                        cantidad=1;
                     }
                     if (i==s.Length-1)
                     {
