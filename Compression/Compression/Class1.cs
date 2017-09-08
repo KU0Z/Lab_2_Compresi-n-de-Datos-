@@ -42,10 +42,7 @@ namespace Compression
             // Read the source file into a byte array.
 
         }
-        public string ConvertirBinarioYTexto(byte[] datosBinario)
-        {
-            return Encoding.ASCII.GetString(datosBinario);
-        }
+        
         public byte[]Comprimir(byte[] s)
         {
             List<byte> lista= new List<byte>();
