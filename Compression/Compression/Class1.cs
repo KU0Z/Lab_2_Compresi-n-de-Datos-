@@ -138,6 +138,7 @@ namespace Compression
             FileStream fsNew = new FileStream(pathNew, FileMode.Create, FileAccess.Write);
             fsNew.Write(bytes, 0, bytes.Length);
             fsNew.Flush();
+            
         }
 
 
