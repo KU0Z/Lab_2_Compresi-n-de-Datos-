@@ -1,5 +1,0 @@
-C:\Users\Diego Pérez Moir\Desktop\U\Cuarto Ciclo\Estructura de Datos ll\Lab_2_Compresi-n-de-Datos--master\Compression\Compression\bin\Debug\Compression.dll
-C:\Users\Diego Pérez Moir\Desktop\U\Cuarto Ciclo\Estructura de Datos ll\Lab_2_Compresi-n-de-Datos--master\Compression\Compression\bin\Debug\Compression.pdb
-C:\Users\Diego Pérez Moir\Desktop\U\Cuarto Ciclo\Estructura de Datos ll\Lab_2_Compresi-n-de-Datos--master\Compression\Compression\obj\Debug\Compression.csprojResolveAssemblyReference.cache
-C:\Users\Diego Pérez Moir\Desktop\U\Cuarto Ciclo\Estructura de Datos ll\Lab_2_Compresi-n-de-Datos--master\Compression\Compression\obj\Debug\Compression.dll
-C:\Users\Diego Pérez Moir\Desktop\U\Cuarto Ciclo\Estructura de Datos ll\Lab_2_Compresi-n-de-Datos--master\Compression\Compression\obj\Debug\Compression.pdb
