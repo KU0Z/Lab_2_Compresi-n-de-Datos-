@@ -26,6 +26,9 @@ namespace Compression
             //Escritura del archivo Comprimido
             escribir_archivo(bytes);
         }
+
+      
+        
         public void Descomprir(string path)
         {
             _path = path;
