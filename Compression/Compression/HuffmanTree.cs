@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Collections;
 using System.Threading.Tasks;
 
 namespace Compression
@@ -9,7 +10,34 @@ namespace Compression
     class HuffmanTree
     {
         List<HuffmanNode> data = new List<HuffmanNode>();
+        private string encodedText = "";
         public HuffmanNode root { get; set; }
+        public byte[] EncodeText(byte[] fileData)
+        {
+            for (int i = 0; i < fileData.Length; i++)
+            {
+                string currentCharacter = Convert.ToChar(fileData[i]).ToString();
+                SearchNode(currentCharacter, root);            
+            }
+            return BinaryToByte(encodedText);                
+        }
+        public byte[] BinaryToByte(string bits)
+        {
+            int numBytes = (int)Math.Ceiling(bits.Length / 8m);
+            int finalBytes = bits.Length % 8;
+            byte[] bytes = new byte[numBytes];
+            int size = 8;
+            for (int i = 0; i < numBytes -1; i++)
+            {
+                string prueba = bits.Substring(520, 2);
+                bytes[i] = Convert.ToByte(bits.Substring((size)*i, size), 2);
+            }
+            if(finalBytes != 0)
+            {
+                bytes[numBytes -1] = Convert.ToByte(bits.Substring((bits.Length - finalBytes), finalBytes));
+            }
+            return bytes;
+        }
         public void GetFrequencies(byte[] fileData)
         {
             for (int i = 0; i < fileData.Length; i++)
@@ -25,7 +53,7 @@ namespace Compression
                     data.Add(temp);
                 }
             }
-            data.Sort(); 
+            data.Sort();
         }
 
         public HuffmanNode CreateTree()
@@ -43,6 +71,33 @@ namespace Compression
                 this.root = data.FirstOrDefault();
             }
             return root; 
+        }
+        public void SearchNode(string character, HuffmanNode nodes)
+        {
+            if(nodes != null)
+            {
+                if (nodes.character == character)
+                {
+                    encodedText += nodes.code;
+                }
+                if (nodes.code == "")
+                {
+                    SearchNode(character, nodes.nodeLeft);
+                    SearchNode(character, nodes.nodeRight);
+                }
+                else
+                {
+                    if (nodes.nodeLeft != null)
+                    {
+                        SearchNode(character, nodes.nodeLeft);
+                    }
+                    if (nodes.nodeRight != null)
+                    {
+                        SearchNode(character, nodes.nodeRight);
+                    }
+                }
+            }
+            
         }
 
         public void GetCodes(string code, HuffmanNode nodes)

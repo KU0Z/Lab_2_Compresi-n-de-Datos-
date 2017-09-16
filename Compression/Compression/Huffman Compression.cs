@@ -27,7 +27,7 @@ namespace Compression
             return bytesLeidos;
 
         }
-        public byte[] CompressHuffman(string path)
+        public byte[] GetCompressedData(string path)
         {
             _path = path;
             //Lectura de Bytes        
@@ -36,7 +36,27 @@ namespace Compression
             frequencyTree.GetFrequencies(bytes);
             HuffmanNode aux = frequencyTree.CreateTree();
             frequencyTree.GetCodes("", aux);
-            return bytes;
+            return frequencyTree.EncodeText(bytes);            
+        }
+
+        private void WriteFile(byte[] bytesComprimidos)
+        {
+            string folderName = @"c:\Archivos Comprimidos";
+            Directory.CreateDirectory(folderName);
+            DirectoryInfo archivo = new DirectoryInfo(_path);
+            string nombrenuearchivo = archivo.Name.Substring(0, (archivo.Name.Length - archivo.Extension.Length));
+            string pathNew = Path.Combine(folderName, (nombrenuearchivo + ".relx"));
+            byte[] bytes = bytesComprimidos;
+            FileStream fsNew = new FileStream(pathNew, FileMode.Create, FileAccess.Write);
+            fsNew.Write(bytes, 0, bytes.Length);
+            fsNew.Flush();
+            fsNew.Close();
+        }
+
+        public void HuffmanCompresion(string path)
+        {
+            byte[] data = GetCompressedData(path);
+            WriteFile(data);
         }
     }
 }
