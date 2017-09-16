@@ -167,7 +167,6 @@ namespace Compression
             fsNew.Flush();
             fsNew.Close();
         }
-        //Sirve para descomprimir
         private void escribirArchivoDes(byte[] bytesComprimidos)
         {
             string folderName = @"c:\Archivos Comprimidos";
@@ -181,7 +180,7 @@ namespace Compression
             fsNew.Flush();
             fsNew.Close();
         }
-        
+
 
     }
 }
