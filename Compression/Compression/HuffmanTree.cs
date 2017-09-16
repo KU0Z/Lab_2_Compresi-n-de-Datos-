@@ -25,16 +25,16 @@ namespace Compression
         {
             int numBytes = (int)Math.Ceiling(bits.Length / 8m);
             int finalBytes = bits.Length % 8;
+            
             byte[] bytes = new byte[numBytes];
             int size = 8;
             for (int i = 0; i < numBytes -1; i++)
             {
-                string prueba = bits.Substring(520, 2);
                 bytes[i] = Convert.ToByte(bits.Substring((size)*i, size), 2);
             }
             if(finalBytes != 0)
             {
-                bytes[numBytes -1] = Convert.ToByte(bits.Substring((bits.Length - finalBytes), finalBytes));
+                bytes[numBytes -1] = Convert.ToByte(bits.Substring((bits.Length - finalBytes), finalBytes),2);
             }
             return bytes;
         }
