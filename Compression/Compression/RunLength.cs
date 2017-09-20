@@ -121,7 +121,6 @@ namespace Compression
         private byte[] DescomprecionDatos(byte[] s)
         {
 
-            DirectoryInfo archivo = new DirectoryInfo(_path);
             List<byte> listaDescomprimida = new List<byte>();
             int numeroRepeticiones;
             byte caracterRepetido;

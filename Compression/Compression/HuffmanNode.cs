@@ -13,9 +13,10 @@ namespace Compression
         public HuffmanNode nodeRight;
         public HuffmanNode nodeLeft;
         public HuffmanNode parent;
-        public string code; 
+        public string code;
+        public byte encodedCharacter; 
 
-        public HuffmanNode(string _character)
+        public HuffmanNode(string _character, byte _encodedCharacter)
         {
             character = _character;
             frequency = 1;
@@ -23,6 +24,9 @@ namespace Compression
             nodeRight = null;
             parent = null;
             code = "";
+            encodedCharacter = _encodedCharacter;
+
+
         }
         //Combine two nodes
         public HuffmanNode(HuffmanNode nodeA, HuffmanNode nodeB)
@@ -53,4 +57,6 @@ namespace Compression
         }
 
     }
+
+ 
 }
