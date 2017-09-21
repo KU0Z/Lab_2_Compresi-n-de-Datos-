@@ -12,6 +12,22 @@ namespace Compression
         private string extension;
 
         private string path;
+
+        private double fileLength;
+        private double fileLengthAfter;
+
+
+        public double _fileLength
+        {
+            get { return fileLength; }
+            set { fileLength = value; }
+        }
+
+        public double _fileLengthAfter
+        {
+            get { return fileLengthAfter; }
+            set { fileLengthAfter = value; }
+        }
         public string _path
         {
             get { return path; }
@@ -21,6 +37,7 @@ namespace Compression
         private byte[] LecturaArchivo(string path)
         {
             FileStream Source = new FileStream(path, FileMode.Open, FileAccess.Read);
+            _fileLength = Source.Length;
             BinaryReader lecturaBytes = new BinaryReader(Source);
             byte[] bytesLeidos = new byte[Source.Length];
             bytesLeidos = lecturaBytes.ReadBytes(Convert.ToInt32(Source.Length));
@@ -52,6 +69,7 @@ namespace Compression
             byte[] bytes = bytesComprimidos;
             FileStream fsNew = new FileStream(pathNew, FileMode.Create, FileAccess.Write);
             fsNew.Write(bytes, 0, bytes.Length);
+            _fileLengthAfter = fsNew.Length;
             fsNew.Flush();
             fsNew.Close();
         }
@@ -149,6 +167,13 @@ namespace Compression
 
             listaDescomprimida = arbolDes.DescompressedBytes(encode);
             return listaDescomprimida;
+        }
+
+        public void CompressionRate()
+        {
+            Console.WriteLine("índice de compresion: {0}", (_fileLengthAfter / _fileLength));
+            Console.WriteLine("factor de compresión: {0}", (_fileLength / _fileLengthAfter));
+            Console.WriteLine("% de ahorro: {0}", ((Math.Abs(_fileLength - _fileLengthAfter)) / _fileLength) * 100);
         }
     }
 }

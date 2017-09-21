@@ -12,6 +12,9 @@ namespace Compression
         private string path;
         private string data;
         private string extencionArchivo;
+        private string fileName; 
+        public double _pesoArchivo { get; set; }
+        public double _pesoArchivoComprimido { get; set; }
         public string _data { get; set; }
 
         public string _path { get; set; }
@@ -43,6 +46,8 @@ namespace Compression
         {
             FileStream Source = new FileStream(path, FileMode.Open, FileAccess.Read);
             BinaryReader lecturaBytes = new BinaryReader(Source);
+            _pesoArchivo = Source.Length;
+            fileName = Source.Name;
             byte[] bytesLeidos = new byte[Source.Length];
             bytesLeidos = lecturaBytes.ReadBytes(Convert.ToInt32(Source.Length));
             Source.Flush();
@@ -163,6 +168,7 @@ namespace Compression
             byte[] bytes = bytesComprimidos;
             FileStream fsNew = new FileStream(pathNew, FileMode.Create, FileAccess.Write);
             fsNew.Write(bytes, 0, bytes.Length);
+            _pesoArchivoComprimido = fsNew.Length;
             fsNew.Flush();
             fsNew.Close();
         }
@@ -180,7 +186,17 @@ namespace Compression
             fsNew.Flush();
             fsNew.Close();
         }
-        
 
+        public void ShowName(string path)
+        {
+            Console.WriteLine(fileName);
+        }
+
+        public void CompressionRate()
+        {
+            Console.WriteLine("índice de compresion: {0}", (_pesoArchivoComprimido / _pesoArchivo));
+            Console.WriteLine("factor de compresión: {0}", (_pesoArchivo / _pesoArchivoComprimido));
+            Console.WriteLine("% de ahorro: {0}", (((Math.Abs(_pesoArchivo - _pesoArchivoComprimido)) / _pesoArchivo) * 100));
+        }
     }
 }
