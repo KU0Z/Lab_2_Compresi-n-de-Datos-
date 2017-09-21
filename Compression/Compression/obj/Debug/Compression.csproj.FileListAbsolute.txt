@@ -10,6 +10,5 @@ C:\Users\Diego Pérez Moir\Source\Repos\Lab_2_Compresi-n-de-Datos-\Compression\C
 C:\Users\Diego Pérez Moir\Source\Repos\Lab_2_Compresi-n-de-Datos-\Compression\Compression\obj\Debug\Compression.csprojResolveAssemblyReference.cache
 C:\Users\keviu\Source\Repos\Lab_2_Compresi-n-de-Datos-\Compression\Compression\bin\Debug\Compression.dll
 C:\Users\keviu\Source\Repos\Lab_2_Compresi-n-de-Datos-\Compression\Compression\bin\Debug\Compression.pdb
-C:\Users\keviu\Source\Repos\Lab_2_Compresi-n-de-Datos-\Compression\Compression\obj\Debug\Compression.csprojResolveAssemblyReference.cache
 C:\Users\keviu\Source\Repos\Lab_2_Compresi-n-de-Datos-\Compression\Compression\obj\Debug\Compression.dll
 C:\Users\keviu\Source\Repos\Lab_2_Compresi-n-de-Datos-\Compression\Compression\obj\Debug\Compression.pdb

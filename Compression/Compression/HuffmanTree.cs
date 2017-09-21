@@ -9,8 +9,9 @@ namespace Compression
 {
     class HuffmanTree
     {
-        List<HuffmanNode> data = new List<HuffmanNode>();
+        public List<HuffmanNode> data = new List<HuffmanNode>();
         Dictionary<byte, HuffmanNode> table = new Dictionary<byte, HuffmanNode>();
+        Dictionary<string, byte> tableDes = new Dictionary<string, byte>();
         private string encodedText = "";
         private string fileExtension;
         string code;
@@ -24,17 +25,14 @@ namespace Compression
         {
             _fileExtension = extension;
         }
+        public HuffmanTree()
+        {
+
+        }
 
         public byte[] EncodeText(byte[] fileData, string fileExtension)
         {
-        //    for (int i = 0; i < fileData.Length; i++)
-        //    {
-                
-        //        //string currentCharacter = Convert.ToChar(fileData[i]).ToString();
-        //        code = table[fileData[i]].code;
-        //        encodedText += code;
-        //        //SearchNode(currentCharacter, root);            
-        //    }
+   
 
             foreach(byte bytes in fileData)
             {
@@ -42,12 +40,12 @@ namespace Compression
 
                 encodedText += table[bytes].code;
             }
-
             return BinaryToByte(encodedText, fileExtension);                
         }
         public byte[] BinaryToByte(string bits, string fileExtension)
         {
-            int numBytes = (int)Math.Ceiling(bits.Length / 8m);
+            
+            int numBytes = (bits.Length / 8);
             int finalBytes = bits.Length % 8;
             byte[] byteExtension = Encoding.ASCII.GetBytes(fileExtension);
             //byte[] bytes = new byte[numBytes];
@@ -58,35 +56,47 @@ namespace Compression
             foreach (KeyValuePair<byte, HuffmanNode> node in table)
             {
                 HuffmanNode temp = node.Value;
-                int residue = temp.code.Length % 8;
-                if (temp.code.Length < 8)
+                int residue = temp.frequency % 255;
+                if (temp.frequency < 255)
                 {
                     bytes.Add(temp.encodedCharacter);
-                    bytes.Add(Convert.ToByte(temp.code, 2));
+                    bytes.Add(Convert.ToByte(temp.frequency));
                 }
                 else
                 {
-                    for (int i = 0; i < (temp.code.Length / 8); i++)
+                    for (int i = 0; i < (temp.frequency/ 255); i++)
                     {
                         counter++;
                         bytes.Add(temp.encodedCharacter);
-                        bytes.Add(Convert.ToByte(temp.code.Substring(0, size), 2));
+                        bytes.Add(Convert.ToByte(255));
                     }
                     if (residue != 0)
                     {
                         counter++;
                         bytes.Add(temp.encodedCharacter);
-                        bytes.Add(Convert.ToByte(temp.code.Substring(size - residue, residue), 2));
+                        bytes.Add(Convert.ToByte(temp.frequency % 255));
                     }
                     counter--;
                 }
                 //bytes.Insert(0, byte outa);
             }
+            // salto;
             int jump = (table.Count + counter) * 2;
             int divJump = jump / 255;
             int modJump = jump % 255;
-            bytes.Insert(0, Convert.ToByte(modJump));
-            bytes.Insert(0, Convert.ToByte(divJump));
+            if (jump>255)
+            {
+                bytes.Insert(0, Convert.ToByte(divJump));
+                bytes.Insert(0, Convert.ToByte(modJump));
+                
+            }
+            else
+            {
+                bytes.Insert(0, Convert.ToByte(jump));
+                bytes.Insert(0, Convert.ToByte(0));
+                
+            }
+            
             //Extencion
             byte bytesCantidad = Convert.ToByte(byteExtension.Length);
             bytes.Add(bytesCantidad);
@@ -94,13 +104,14 @@ namespace Compression
             {
                 bytes.Add(byteExtension[i]);
             }
-            for (int i = 0; i < numBytes -1; i++)
+            for (int i = 0; i < numBytes ; i++)
             {
                 bytes.Add(Convert.ToByte(bits.Substring((size)*i, size), 2));
             }
             if(finalBytes != 0)
             {
                 bytes.Add(Convert.ToByte(bits.Substring((bits.Length - finalBytes), finalBytes),2));
+                bytes.Add(Convert.ToByte(finalBytes));
             }
 
             return bytes.ToArray();
@@ -120,7 +131,12 @@ namespace Compression
                     data.Add(temp);
                 }
             }
+            data.Sort(delegate (HuffmanNode p1, HuffmanNode p2)
+            {
+                return p1.encodedCharacter.CompareTo(p2.encodedCharacter);
+            });
             data.Sort();
+
         }
 
         public HuffmanNode CreateTree()
@@ -181,6 +197,38 @@ namespace Compression
             }
             GetCodes(code + "0", nodes.nodeLeft);
             GetCodes(code + "1", nodes.nodeRight);
+        }
+        public void GetCodesDes(string code, HuffmanNode nodes)
+        {
+            if (nodes == null)
+            {
+                return;
+            }
+            if (nodes.nodeLeft == null && nodes.nodeRight == null)
+            {
+                nodes.code = code;
+                tableDes.Add(nodes.code, nodes.encodedCharacter);
+                return;
+            }
+            GetCodesDes(code + "0", nodes.nodeLeft);
+            GetCodesDes(code + "1", nodes.nodeRight);
+        }
+
+        public byte[] DescompressedBytes(string code)
+        {
+            List<byte> descompressedBytes = new List<byte>(); 
+            for(int i = 0; i <= code.Length; i++ )
+            {
+                 if(tableDes.ContainsKey(code.Substring(0, i)))
+                {
+                    descompressedBytes.Add(tableDes[code.Substring(0, i)]);                   
+                    code = code.Remove(0, i);
+                    i = 0;
+                }
+
+            }
+
+            return descompressedBytes.ToArray();
         }
         
     }

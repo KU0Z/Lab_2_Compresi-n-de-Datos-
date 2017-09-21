@@ -26,8 +26,8 @@ namespace Compression
             code = "";
             encodedCharacter = _encodedCharacter;
 
-
         }
+
         //Combine two nodes
         public HuffmanNode(HuffmanNode nodeA, HuffmanNode nodeB)
         {
@@ -55,6 +55,7 @@ namespace Compression
         {
             return this.frequency.CompareTo(otherNode.frequency);
         }
+
 
     }
 

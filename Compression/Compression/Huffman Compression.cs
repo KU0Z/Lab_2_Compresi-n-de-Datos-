@@ -42,13 +42,13 @@ namespace Compression
             return frequencyTree.EncodeText(bytes, frequencyTree._fileExtension);            
         }
 
-        private void WriteFile(byte[] bytesComprimidos)
+        private void WriteFile(byte[] bytesComprimidos, string ext)
         {
             string folderName = @"c:\Archivos Comprimidos";
             Directory.CreateDirectory(folderName);
             DirectoryInfo archivo = new DirectoryInfo(_path);
             string nombrenuearchivo = archivo.Name.Substring(0, (archivo.Name.Length - archivo.Extension.Length));
-            string pathNew = Path.Combine(folderName, (nombrenuearchivo + ".relx"));
+            string pathNew = Path.Combine(folderName, (nombrenuearchivo + ext));
             byte[] bytes = bytesComprimidos;
             FileStream fsNew = new FileStream(pathNew, FileMode.Create, FileAccess.Write);
             fsNew.Write(bytes, 0, bytes.Length);
@@ -59,57 +59,96 @@ namespace Compression
         public void HuffmanCompresion(string path)
         {
             byte[] data = GetCompressedData(path);
-            WriteFile(data);
+            WriteFile(data, ".relx");
         }
         public void HuffmanDescompress(string path)
         {
             _path = path;
             //Lectura de Bytes     
-            byte[] data = LecturaArchivo(_path);
-
-            WriteFile(data);
+            byte[] data = LecturaArchivo(_path);      
+            data= EncodeText(data);
+            WriteFile(data, extension);
         }
         public byte[] EncodeText(byte[] readerBytes)
         {
-            Dictionary<string, byte> tableDescompressed = new Dictionary<string, byte>();
-              List <byte> listaDescomprimida = new List<byte>();
+            Dictionary<byte,HuffmanNode> tableDescompressed = new Dictionary<byte, HuffmanNode>();
+            byte[] listaDescomprimida;
             int jump = 255;
             int jumpMod= Convert.ToInt32(readerBytes[0]);
             int jumpDiv = Convert.ToInt32(readerBytes[1]);
             jump = (jump * jumpMod) + jumpDiv;
 
-            for (int i = 2; i < jump; i=i+2)
+            for (int i = 2; i <= jump; i=i+2)
             {
-                //if (tableDescompressed.ContainsKey())
-                //{
+                if (tableDescompressed.ContainsKey(readerBytes[i]))
+                {
+                    HuffmanNode nodo = tableDescompressed[readerBytes[i]];
+                    nodo.frequency+= Convert.ToInt32(readerBytes[i + 1]);
+                    tableDescompressed.Remove(readerBytes[i]);
+                    tableDescompressed.Add(readerBytes[i], nodo);
+                }
+                else
+                {
+                    HuffmanNode nodo=new HuffmanNode(readerBytes[i].ToString(),readerBytes[i]);
+                    nodo.frequency = Convert.ToInt32(readerBytes[i + 1]);
+                    tableDescompressed.Add(readerBytes[i],nodo);
+                    
+                }
+            }
+            HuffmanTree arbolDes = new HuffmanTree();
+            arbolDes.data = new List<HuffmanNode>(tableDescompressed.Values);
+            arbolDes.data.Sort(delegate (HuffmanNode p1, HuffmanNode p2)
+            {
+                return p1.encodedCharacter.CompareTo(p2.encodedCharacter);
+            });
+            arbolDes.data.Sort();
+            HuffmanNode aux = arbolDes.CreateTree();
+            arbolDes.GetCodesDes("", aux);
+            string encode="";
+            int tamañoExtencion = Convert.ToInt32(readerBytes[jump+2]);
+            byte[] bytesExtencion = new byte[tamañoExtencion];
+            for (int i = 0; i < tamañoExtencion; i++)
+            {
+                bytesExtencion[i] = readerBytes[i + jump + 3];
+            }
+            extension = Encoding.ASCII.GetString(bytesExtencion);
+            for (int i = jump +3+tamañoExtencion; i < readerBytes.Length-2; i++)
+            {
+                string currentByte = Convert.ToString(readerBytes[i], 2);
+                if(currentByte.Length<8)
+                {
+                    for (int j = 0; j < 8 - currentByte.Length; j++)
+                    {
+                        encode += "0";
+                    }
+                }
 
-                //}
-                //else
-                //{
-                //    tableDescompressed.Add(Convert.ToString(readerBytes[i + 1]), readerBytes[i]);
-                //}
+                encode += currentByte;
+
+
+            }
+            int lastbyte = Convert.ToInt32(readerBytes[readerBytes.Length-1]);
+            if (lastbyte != 0)
+            {
+                string currentByte = Convert.ToString(readerBytes[readerBytes.Length-2], 2);
+                if(currentByte.Length<lastbyte)
+                {
+                    for (int j = 0; j < 8 - currentByte.Length; j++)
+                    {
+                        encode += "0";
+                    }
+                   
+                }
+                encode += currentByte;
+            }
+            else
+            {
+                string currentByte = Convert.ToString(readerBytes[readerBytes.Length - 2], 2);
+                encode += currentByte;
             }
 
-            //int numeroRepeticiones;
-            //byte caracterRepetido;
-            //byte[] bytesExtencion;
-            //int tamañoExtencion = Convert.ToInt32(s[0]);
-            //bytesExtencion = new byte[tamañoExtencion];
-            //for (int i = 0; i < tamañoExtencion; i++)
-            //{
-            //    bytesExtencion[i] = s[i + 1];
-            //}
-            //extencionArchivo = ConvertirBinarioYTexto(bytesExtencion);
-            //for (int i = tamañoExtencion + 1; i < s.Length; i = i + 2)
-            //{
-            //    numeroRepeticiones = Convert.ToInt32(s[i]);
-            //    caracterRepetido = s[i + 1];
-            //    for (int j = 0; j < numeroRepeticiones; j++)
-            //    {
-            //        listaDescomprimida.Add(caracterRepetido);
-            //    }
-            //}
-            return listaDescomprimida.ToArray();
+            listaDescomprimida = arbolDes.DescompressedBytes(encode);
+            return listaDescomprimida;
         }
     }
 }
