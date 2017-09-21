@@ -24,6 +24,7 @@ namespace Laboratorio_01
                 option = Console.ReadLine();
                 if (option == "c")
                 {
+                    Console.Clear();
                     Console.WriteLine("Elija un método de compresión");
                     Console.WriteLine("1. Run Length Encoding");
                     Console.WriteLine("2. Huffman");
@@ -31,28 +32,38 @@ namespace Laboratorio_01
                     option = Console.ReadLine();
                     if (option != "3")
                     {
-                        if (option == "1")
+                        try
                         {
-                            Console.WriteLine("Ingrese la ruta del archivo");
-                            path = Console.ReadLine();
-                            rle.Comprimir(path);
-                            rle.CompressionRate();
-                            Console.WriteLine("Presione una tecla para continuar...");
-                            Console.ReadKey(); 
+                            if (option == "1")
+                            {
+                                Console.WriteLine("Ingrese la ruta del archivo");
+                                path = Console.ReadLine();
+                                rle.Comprimir(path);
+                                rle.CompressionRate();
+                                Console.WriteLine("Presione una tecla para continuar...");
+                                Console.ReadKey();
+                            }
+                            else if (option == "2")
+                            {
+                                Console.WriteLine("Ingrese la ruta del archivo");
+                                path = Console.ReadLine();
+                                huffman.HuffmanCompresion(path);
+                                huffman.CompressionRate();
+                                Console.WriteLine("Presione una tecla para continuar...");
+                                Console.ReadKey();
+                            }
                         }
-                        else if (option == "2")
+                        catch (Exception ex)
                         {
-                            Console.WriteLine("Ingrese la ruta del archivo");
-                            path = Console.ReadLine();
-                            huffman.HuffmanCompresion(path);
-                            huffman.CompressionRate();
-                            Console.WriteLine("Presione una tecla para continuar...");
+                            Console.WriteLine("Descompresión Fallada, presione una tecla para continuar...");
                             Console.ReadKey();
                         }
+                        
                     }
                 }
                 else if (option == "d")
                 {
+                    Console.Clear();
                     Console.WriteLine("Elija un método de descompresión");
                     Console.WriteLine("1. Run Length Encoding");
                     Console.WriteLine("2. Huffman");
@@ -62,19 +73,38 @@ namespace Laboratorio_01
                     {
                         if (option == "1")
                         {
-                            Console.WriteLine("Ingrese la ruta del archivo");
-                            path = Console.ReadLine();
-                            rle.Descomprir(path);
-                            Console.WriteLine("Descompresión realizada exitosamente, presione una tecla para continuar...");
-                            Console.ReadKey();
+                            try
+                            {
+                                Console.WriteLine("Ingrese la ruta del archivo");
+                                path = Console.ReadLine();
+                                rle.Descomprir(path);
+                                Console.WriteLine("Descompresión realizada exitosamente, presione una tecla para continuar...");
+                                Console.ReadKey();
+                            }
+                            catch(Exception ex)
+                            {
+                                Console.WriteLine("Descompresión Fallada, presione una tecla para continuar...");
+                                Console.ReadKey();
+                            }
+                            
                         }
                         else if (option == "2")
                         {
-                            Console.WriteLine("Ingrese la ruta del archivo");
-                            path = Console.ReadLine();
-                            huffman.HuffmanDescompress(path);
-                            Console.WriteLine("Descompresión realizada exitosamente, presione una tecla para continuar...");
-                            Console.ReadKey();
+                            try
+                            {
+                                Console.WriteLine("Ingrese la ruta del archivo");
+                                path = Console.ReadLine();
+                                huffman.HuffmanDescompress(path);
+                                Console.WriteLine("Descompresión realizada exitosamente, presione una tecla para continuar...");
+                                Console.ReadKey();
+                                
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Descompresión Fallada, presione una tecla para continuar...");
+                                Console.ReadKey();
+                            }
+                            
                         }
                     }
                 }
