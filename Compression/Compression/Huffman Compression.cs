@@ -77,7 +77,7 @@ namespace Compression
         public void HuffmanCompresion(string path)
         {
             byte[] data = GetCompressedData(path);
-            WriteFile(data, ".relx");
+            WriteFile(data, ".comp");
         }
         public void HuffmanDescompress(string path)
         {
